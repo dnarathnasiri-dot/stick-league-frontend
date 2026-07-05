@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
+import replayShattered from '../../../imports/Stickman_juggling_and_kicking_so__202606140242.mp4';
+import replayCarnage from '../../../imports/Stickman_pulled_into_portal_202606140256.mp4';
 
 const Brackets: React.FC = () => {
+  const [playingReplay, setPlayingReplay] = useState<PlayableVideo | null>(null);
   return (
     <div className="space-y-16 pb-12 select-none subpixel-antialiased text-left">
       {/* Tournament Header */}
@@ -157,7 +161,7 @@ const Brackets: React.FC = () => {
             <h2 className="font-display text-4xl text-on-background uppercase font-bold tracking-tight">Recent Violence</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="group cursor-pointer">
+            <div className="group cursor-pointer" onClick={() => setPlayingReplay({ title: 'REPLAY: S1N vs HEX', video: replayShattered })}>
               <div className="relative aspect-video overflow-hidden border border-[var(--e-border)] mb-4">
                 <img 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale" 
@@ -175,7 +179,7 @@ const Brackets: React.FC = () => {
                 S1NISTER executes a flawless 3-hit combo to secure the first quarter-final victory.
               </p>
             </div>
-            <div className="group cursor-pointer">
+            <div className="group cursor-pointer" onClick={() => setPlayingReplay({ title: 'REPLAY: RAW vs VOID', video: replayCarnage })}>
               <div className="relative aspect-video overflow-hidden border border-[var(--e-border)] mb-4">
                 <img 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 grayscale" 
@@ -220,6 +224,8 @@ const Brackets: React.FC = () => {
           <button className="w-full border-2 border-primary text-primary font-display py-3 hover:bg-primary/10 transition-colors uppercase font-extrabold text-sm tracking-wider">VIEW FULL RANKINGS</button>
         </div>
       </section>
+
+      <ReplayVideoModal video={playingReplay} onClose={() => setPlayingReplay(null)} />
     </div>
   );
 };

@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
+import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
+import replayA from '../../../imports/Stickman_juggling_and_kicking_so__202606140242.mp4';
+import replayB from '../../../imports/Stickman_juggling_and_kicking_so__202606140243.mp4';
+import replayC from '../../../imports/Stickman_pulled_into_portal_202606140256.mp4';
 
 interface ChatMessage {
   username: string;
@@ -6,8 +11,42 @@ interface ChatMessage {
   isPrimary?: boolean;
 }
 
+interface ReplayClip extends PlayableVideo {
+  id: string;
+  thumbnail: string;
+  duration: string;
+}
+
+const REPLAYS: ReplayClip[] = [
+  {
+    id: 'replay-1',
+    title: 'NIGHT CRAWLER — CLEAR RUN',
+    thumbnail:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAp5F6cyhSYAqZ8KaFizjwRFWXsQluh5oHMi23zXade65XZXcS1z0d6k7Aaing_Rf-AyWGpRqsaRzC4jWQ-PT5CsnxpTx4uUsfrdbPbtSFvdAylwwFr1Uaug318Y8VDjZIyJFm_RRfudqbVaXH6H2H0vT_kfTfO4phyW2ip6dLgjmkHcwOPr9r6vdfr9zKKjyU2HaFXgxWqefoUjx9-g79l7ygwsJql7TlodjjW_zeIgQ8o_w94Bs4FTuW_4j55y54wsqycC8vdp3U',
+    video: replayA,
+    duration: '03:42',
+  },
+  {
+    id: 'replay-2',
+    title: 'SILENT STRIKE — NO DAMAGE TAKEN',
+    thumbnail:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDLOYX6xbvJ_bVqd5kQ_osIsf3Gv88jHawGqTrdbjbNXroR1mk5_cUwcsth7BVi2s15rHFiFt33ki6ghsoBoeO1BFWIIOzYX5wGvTrE3TqzwQwMUEPal9ewYTTj0d_J12DFZeczt3Xpj6SXyacaTk-8WR41EGjsYZCrNtIpRvbwLCYoBjveKG-cZ9gu7SbzQZYhxCQz8k6RreCcSe8MH8un8d8XpjUTtEiFmMVHSt6H2U2DfpFUbUeaijELaeBAWvzSW8VWUSXOGhA',
+    video: replayB,
+    duration: '01:15',
+  },
+  {
+    id: 'replay-3',
+    title: 'INK SPILL — 50K DAMAGE COMBO',
+    thumbnail:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD_xBT7A2SRTZJlDbQ81Zsu2sQnDz3M9N-8yhuBcRQ6talK1_UIPNYZSUL5Y4jemd0f6UEO7mG32GqzS6PCekNGXVgziDzQpwbNVHX2onemvHgO2PyD29GoqX1T-XLICPDI4MpgiSyNas2GcvPwkWteDW7WJWN4aPEzEqb7WC9grtgFb8Zu80nP1xZNn6vwgyy7Ma7oQlfv0rhp4xEZPp8eNh5gFNL75tx02QU4EQxGZPPom6NSZLWxOWI7qqGhoIZ1ck-kjavMyis',
+    video: replayC,
+    duration: '02:30',
+  },
+];
+
 const Home: React.FC = () => {
   const [contractAccepted, setContractAccepted] = useState(false);
+  const [playingReplay, setPlayingReplay] = useState<ReplayClip | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { username: 'CYBER_PUNK', text: 'Just cleared Night Crawler on Hard. Insane.', isPrimary: true },
     { username: 'GHOST_USER', text: 'Anyone looking for a squad for Season 01?' },
@@ -146,39 +185,27 @@ const Home: React.FC = () => {
           <div className="space-y-6 pt-12 text-left">
             <h2 className="font-display text-3xl text-on-surface uppercase tracking-tight font-bold border-l-4 border-primary pl-4 leading-none">LATEST REPLAYS</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="aspect-video bg-surface-container-high border border-outline-variant relative group cursor-pointer overflow-hidden">
-                <img 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp5F6cyhSYAqZ8KaFizjwRFWXsQluh5oHMi23zXade65XZXcS1z0d6k7Aaing_Rf-AyWGpRqsaRzC4jWQ-PT5CsnxpTx4uUsfrdbPbtSFvdAylwwFr1Uaug318Y8VDjZIyJFm_RRfudqbVaXH6H2H0vT_kfTfO4phyW2ip6dLgjmkHcwOPr9r6vdfr9zKKjyU2HaFXgxWqefoUjx9-g79l7ygwsJql7TlodjjW_zeIgQ8o_w94Bs4FTuW_4j55y54wsqycC8vdp3U" 
-                  alt="Replay 1"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-5xl text-white">play_circle</span>
-                </div>
-                <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-bold">03:42</div>
-              </div>
-              <div className="aspect-video bg-surface-container-high border border-outline-variant relative group cursor-pointer overflow-hidden">
-                <img 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLOYX6xbvJ_bVqd5kQ_osIsf3Gv88jHawGqTrdbjbNXroR1mk5_cUwcsth7BVi2s15rHFiFt33ki6ghsoBoeO1BFWIIOzYX5wGvTrE3TqzwQwMUEPal9ewYTTj0d_J12DFZeczt3Xpj6SXyacaTk-8WR41EGjsYZCrNtIpRvbwLCYoBjveKG-cZ9gu7SbzQZYhxCQz8k6RreCcSe8MH8un8d8XpjUTtEiFmMVHSt6H2U2DfpFUbUeaijELaeBAWvzSW8VWUSXOGhA" 
-                  alt="Replay 2"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-5xl text-white">play_circle</span>
-                </div>
-                <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-bold">01:15</div>
-              </div>
-              <div className="aspect-video bg-surface-container-high border border-outline-variant relative group cursor-pointer overflow-hidden">
-                <img 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_xBT7A2SRTZJlDbQ81Zsu2sQnDz3M9N-8yhuBcRQ6talK1_UIPNYZSUL5Y4jemd0f6UEO7mG32GqzS6PCekNGXVgziDzQpwbNVHX2onemvHgO2PyD29GoqX1T-XLICPDI4MpgiSyNas2GcvPwkWteDW7WJWN4aPEzEqb7WC9grtgFb8Zu80nP1xZNn6vwgyy7Ma7oQlfv0rhp4xEZPp8eNh5gFNL75tx02QU4EQxGZPPom6NSZLWxOWI7qqGhoIZ1ck-kjavMyis" 
-                  alt="Replay 3"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-5xl text-white">play_circle</span>
-                </div>
-                <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-bold">02:30</div>
-              </div>
+              {REPLAYS.map((clip) => (
+                <motion.div
+                  key={clip.id}
+                  onClick={() => setPlayingReplay(clip)}
+                  whileHover={{ y: -3 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="aspect-video bg-surface-container-high border border-outline-variant relative group cursor-pointer overflow-hidden"
+                >
+                  <img
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                    src={clip.thumbnail}
+                    alt={clip.title}
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="material-symbols-outlined text-5xl text-white">play_circle</span>
+                  </div>
+                  <div className="absolute bottom-2 left-2 bg-black/80 px-2 py-0.5 font-mono text-[9px] font-bold">
+                    {clip.duration}
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
@@ -256,6 +283,9 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* REPLAY VIDEO MODAL */}
+      <ReplayVideoModal video={playingReplay} onClose={() => setPlayingReplay(null)} />
     </div>
   );
 };

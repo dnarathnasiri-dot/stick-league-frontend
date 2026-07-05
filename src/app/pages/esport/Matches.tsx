@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
+import broadcastVideo from '../../../imports/video_202606171249.mp4';
+import matchReplayVideo from '../../../imports/smooth_the_motion_of_this_vide.mp4';
 
 interface MatchItem {
   id: string;
@@ -16,6 +19,7 @@ interface MatchItem {
 
 const Matches: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'live' | 'upcoming' | 'completed'>('all');
+  const [playingReplay, setPlayingReplay] = useState<PlayableVideo | null>(null);
   const [matches, setMatches] = useState<MatchItem[]>([
     {
       id: 'STK-001',
@@ -121,7 +125,10 @@ const Matches: React.FC = () => {
                   </div>
                 </div>
                 <div className="pt-2">
-                  <button className="bg-primary text-black px-6 py-3.5 font-display text-sm tracking-wider flex items-center gap-3 hover:scale-95 transition-transform font-extrabold">
+                  <button
+                    onClick={() => setPlayingReplay({ title: 'LIVE: VANGUARD vs SYNDICATE', video: broadcastVideo })}
+                    className="bg-primary text-black px-6 py-3.5 font-display text-sm tracking-wider flex items-center gap-3 hover:scale-95 transition-transform font-extrabold"
+                  >
                     <span className="material-symbols-outlined text-base">play_arrow</span>
                     WATCH BROADCAST
                   </button>
@@ -209,7 +216,17 @@ const Matches: React.FC = () => {
             </div>
             {m.type === 'completed' ? (
               <div className="flex gap-2">
-                <button className="flex-1 bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-2.5 font-display text-xs font-extrabold hover:bg-[var(--e-surface-container-high)] transition-colors text-[var(--e-text)] tracking-wider">MATCH REPLAY</button>
+                <button
+                  onClick={() =>
+                    setPlayingReplay({
+                      title: `REPLAY: ${m.team1Name} vs ${m.team2Name}`,
+                      video: matchReplayVideo,
+                    })
+                  }
+                  className="flex-1 bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-2.5 font-display text-xs font-extrabold hover:bg-[var(--e-surface-container-high)] transition-colors text-[var(--e-text)] tracking-wider"
+                >
+                  MATCH REPLAY
+                </button>
                 <button className="flex-1 bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-2.5 font-display text-xs font-extrabold hover:bg-[var(--e-surface-container-high)] transition-colors text-[var(--e-text)] tracking-wider">STATISTICS</button>
               </div>
             ) : m.type === 'upcoming' ? (
@@ -232,6 +249,8 @@ const Matches: React.FC = () => {
         <div className="absolute inset-x-0 top-1/2 h-px bg-outline-variant ink-scratch"></div>
         <button className="relative bg-[var(--e-bg)] px-8 font-display text-sm text-primary hover:tracking-widest transition-all uppercase font-extrabold">SHOWING {filteredMatches.length} OF 32 MATCHES — LOAD MORE</button>
       </div>
+
+      <ReplayVideoModal video={playingReplay} onClose={() => setPlayingReplay(null)} />
     </div>
   );
 };
