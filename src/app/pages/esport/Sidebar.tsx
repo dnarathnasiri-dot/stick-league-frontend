@@ -12,7 +12,8 @@ export type EsportPage =
   | 'esport-brackets'
   | 'esport-leaderboard'
   | 'esport-profile'
-  | 'esport-search';
+  | 'esport-search'
+  | 'esport-create-tournament';
 
 interface SidebarProps {
   currentPage: EsportPage;
@@ -33,14 +34,18 @@ const menuItemVariants = {
 const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit }) => {
   const menuItems: { name: string; path: EsportPage }[] = [
     { name: 'HOME', path: 'esport-home' },
-    { name: 'DASHBOARD', path: 'esport-dashboard' },
     { name: 'TOURNAMENT', path: 'esport-tournaments' },
-    { name: 'TEAMS', path: 'esport-teams' },
-    { name: 'PLAYERS', path: 'esport-players' },
     { name: 'MATCHES', path: 'esport-matches' },
     { name: 'BRACKETS', path: 'esport-brackets' },
+    { name: 'TEAMS', path: 'esport-teams' },
+    { name: 'PLAYERS', path: 'esport-players' },
     { name: 'LEADERBOARD', path: 'esport-leaderboard' },
     { name: 'SEARCH', path: 'esport-search' },
+  ];
+
+  const utilityItems: { name: string; path: EsportPage; icon: string }[] = [
+    { name: 'CREATE NEW', path: 'esport-create-tournament', icon: 'add' },
+    { name: 'ADMIN PANEL', path: 'esport-dashboard', icon: 'shield_person' },
   ];
 
   return (
@@ -85,6 +90,29 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit }) =>
             );
           })}
         </motion.nav>
+
+        {/* UTILITY LINKS — CREATE NEW / ADMIN PANEL */}
+        <div className="mt-6 pt-4 border-t border-[var(--e-border)]/60 space-y-1">
+          {utilityItems.map((item) => {
+            const isActive = currentPage === item.path;
+            return (
+              <motion.button
+                key={item.name}
+                onClick={() => onNavigate(item.path)}
+                whileHover={{ x: isActive ? 0 : 4 }}
+                whileTap={{ scale: 0.97 }}
+                className={`relative w-full text-left px-4 py-3 text-xs tracking-widest transition-all overflow-hidden flex items-center gap-2 font-display border-l-4 ${
+                  isActive
+                    ? 'bg-[var(--e-primary-container)] border-[var(--e-accent)] text-white font-extrabold'
+                    : 'border-transparent text-[var(--e-text-muted)] hover:text-[var(--e-accent)] hover:bg-[var(--e-surface-container-low)] font-medium'
+                }`}
+              >
+                <span className="material-symbols-outlined text-sm">{item.icon}</span>
+                <span className="relative z-10">{item.name}</span>
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
 
       {/* USER CARD / LEAGUE VERSION */}
