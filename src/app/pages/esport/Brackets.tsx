@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
-import replayShattered from '../../../imports/Stickman_juggling_and_kicking_so__202606140242.mp4';
-import replayCarnage from '../../../imports/Stickman_pulled_into_portal_202606140256.mp4';
+import replayShattered from '../../../imports/replay-stickman-fight.mp4';
+import replayCarnage from '../../../imports/replay-rain-scene.mp4';
 
 const Brackets: React.FC = () => {
   const [playingReplay, setPlayingReplay] = useState<PlayableVideo | null>(null);
@@ -231,4 +231,3 @@ const Brackets: React.FC = () => {
 };
 
 export default Brackets;
-
