@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
-import replayA from '../../../imports/Stickman_juggling_and_kicking_so__202606140242.mp4';
-import replayB from '../../../imports/Stickman_juggling_and_kicking_so__202606140243.mp4';
-import replayC from '../../../imports/Stickman_pulled_into_portal_202606140256.mp4';
+import replayA from '../../../imports/replay-hooded-figure.mp4';
+import replayB from '../../../imports/replay-sword-slash.mp4';
+import replayC from '../../../imports/replay-fire-duel.mp4';
 
 interface ChatMessage {
   username: string;
@@ -291,4 +291,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
