@@ -292,9 +292,10 @@ export default function App() {
         {isEsportPage(page) && (
           <Screen key={page}>
             <Layout
-              currentPage={page}
-              onNavigate={(p) => setPage(p)}
-              onExit={() => setPage("doors")}
+            currentPage={page}
+            onNavigate={(p) => setPage(p)}
+            onExit={() => setPage("doors")}
+            isAdmin={isAdmin}
             >
               {page === "esport-home" && <EsportHome />}
               {page === "esport-dashboard" && <EsportDashboard />}

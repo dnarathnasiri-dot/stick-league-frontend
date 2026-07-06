@@ -19,6 +19,7 @@ interface SidebarProps {
   currentPage: EsportPage;
   onNavigate: (page: EsportPage) => void;
   onExit: () => void;
+  isAdmin: boolean;
 }
 
 const menuContainer = {
@@ -31,7 +32,7 @@ const menuItemVariants = {
   show: { opacity: 1, x: 0, transition: { duration: 0.25, ease: 'easeOut' } },
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAdmin }) => {
   const menuItems: { name: string; path: EsportPage }[] = [
     { name: 'HOME', path: 'esport-home' },
     { name: 'TOURNAMENT', path: 'esport-tournaments' },
@@ -91,28 +92,30 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit }) =>
           })}
         </motion.nav>
 
-        {/* UTILITY LINKS — CREATE NEW / ADMIN PANEL */}
-        <div className="mt-6 pt-4 border-t border-[var(--e-border)]/60 space-y-1">
-          {utilityItems.map((item) => {
-            const isActive = currentPage === item.path;
-            return (
-              <motion.button
-                key={item.name}
-                onClick={() => onNavigate(item.path)}
-                whileHover={{ x: isActive ? 0 : 4 }}
-                whileTap={{ scale: 0.97 }}
-                className={`relative w-full text-left px-4 py-3 text-xs tracking-widest transition-all overflow-hidden flex items-center gap-2 font-display border-l-4 ${
-                  isActive
-                    ? 'bg-[var(--e-primary-container)] border-[var(--e-accent)] text-white font-extrabold'
-                    : 'border-transparent text-[var(--e-text-muted)] hover:text-[var(--e-accent)] hover:bg-[var(--e-surface-container-low)] font-medium'
-                }`}
-              >
-                <span className="material-symbols-outlined text-sm">{item.icon}</span>
-                <span className="relative z-10">{item.name}</span>
-              </motion.button>
-            );
-          })}
-        </div>
+        {/* UTILITY LINKS — CREATE NEW / ADMIN PANEL — ADMIN ONLY */}
+        {isAdmin && (
+          <div className="mt-6 pt-4 border-t border-[var(--e-border)]/60 space-y-1">
+            {utilityItems.map((item) => {
+              const isActive = currentPage === item.path;
+              return (
+                <motion.button
+                  key={item.name}
+                  onClick={() => onNavigate(item.path)}
+                  whileHover={{ x: isActive ? 0 : 4 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`relative w-full text-left px-4 py-3 text-xs tracking-widest transition-all overflow-hidden flex items-center gap-2 font-display border-l-4 ${
+                    isActive
+                      ? 'bg-[var(--e-primary-container)] border-[var(--e-accent)] text-white font-extrabold'
+                      : 'border-transparent text-[var(--e-text-muted)] hover:text-[var(--e-accent)] hover:bg-[var(--e-surface-container-low)] font-medium'
+                  }`}
+                >
+                  <span className="material-symbols-outlined text-sm">{item.icon}</span>
+                  <span className="relative z-10">{item.name}</span>
+                </motion.button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* USER CARD / LEAGUE VERSION */}
@@ -135,4 +138,3 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit }) =>
 };
 
 export default Sidebar;
-
