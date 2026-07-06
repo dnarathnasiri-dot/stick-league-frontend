@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVideoModal';
-import broadcastVideo from '../../../imports/video_202606171249.mp4';
-import matchReplayVideo from '../../../imports/smooth_the_motion_of_this_vide.mp4';
+import broadcastVideo from '../../../imports/replay-arena-tunnel.mp4';
+import matchReplayVideo from '../../../imports/replay-arena-tunnel.mp4';
 
 interface MatchItem {
   id: string;
@@ -256,4 +256,3 @@ const Matches: React.FC = () => {
 };
 
 export default Matches;
-
