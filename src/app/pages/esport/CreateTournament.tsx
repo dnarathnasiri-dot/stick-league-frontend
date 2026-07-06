@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
+import { TournamentApi, ApiError, type TournamentRequest } from '../../../lib/esportApi';
 
 interface TacticalEnvironment {
   id: string;
@@ -59,18 +60,51 @@ const CreateTournament: React.FC<CreateTournamentProps> = ({ onCreated }) => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
       toast.error('Tournament name is required.');
       return;
     }
+    if (!startDate) {
+      toast.error('Start date is required.');
+      return;
+    }
+
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+
+    try {
+      const start = new Date(startDate);
+      // Backend requires endDate in the future; default the tournament to run for 7 days
+      const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      const body: TournamentRequest = {
+        name: name.trim(),
+        game: 'Stick League',
+        format: hardcoreMode ? 'SINGLE_ELIMINATION' : 'ROUND_ROBIN',
+        status: 'UPCOMING',
+        startDate: start.toISOString(),
+        endDate: end.toISOString(),
+        maxTeams: participantLimit,
+      };
+
+      await TournamentApi.create(body);
+
       toast.success(`"${name.toUpperCase()}" INITIALIZED — ${selectedEnvs.length} arenas locked`);
       onCreated?.();
-    }, 700);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        if (err.status === 401 || err.status === 403) {
+          toast.error('You must be logged in as an admin to create a tournament.');
+        } else {
+          toast.error(err.message || 'Failed to create tournament.');
+        }
+      } else {
+        toast.error('Something went wrong. Please try again.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -304,4 +338,3 @@ const ProtocolRow: React.FC<{
 );
 
 export default CreateTournament;
-
