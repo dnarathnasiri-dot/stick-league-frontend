@@ -297,13 +297,13 @@ export default function App() {
             onExit={() => setPage("doors")}
             isAdmin={isAdmin}
             >
-              {page === "esport-home" && <EsportHome />}
+              {page === "esport-home" && <EsportHome onNavigate={(p) => setPage(p as EsportPage)} />}
               {page === "esport-dashboard" && <EsportDashboard />}
               {page === "esport-tournaments" && <EsportTournaments isAdmin={isAdmin} />}
               {page === "esport-teams" && <EsportTeams isAdmin={isAdmin} />}
               {page === "esport-players" && <EsportPlayers isAdmin={isAdmin} />}
               {page === "esport-matches" && <EsportMatches />}
-              {page === "esport-brackets" && <EsportBrackets />}
+              {page === "esport-brackets" && <EsportBrackets onNavigate={(p) => setPage(p as EsportPage)} />}
               {page === "esport-leaderboard" && <EsportLeaderboard />}
               {page === "esport-profile" && <EsportProfile />}
               {page === "esport-search" && <EsportSearch />}

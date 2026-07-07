@@ -27,6 +27,7 @@ const Players: React.FC<PlayersProps> = ({ isAdmin = false }) => {
   const [username, setUsername] = useState('');
   const [role, setRole] = useState('Entry Fragger');
   const [teamId, setTeamId] = useState('');
+  const [statsPlayer, setStatsPlayer] = useState<Player | null>(null);
 
   const teamName = (id?: string) => teams.find((t) => t.id === id)?.name ?? 'UNASSIGNED';
   const statVal = (p: Player, key: string) => {
@@ -179,7 +180,11 @@ const Players: React.FC<PlayersProps> = ({ isAdmin = false }) => {
               </div>
 
               <div className="flex gap-2 mt-6">
-                <button className="flex-1 border py-2 text-[10px] font-black uppercase transition-all rounded-sm" style={{ borderColor: 'var(--e-border)', color: 'var(--e-text)' }}>
+                <button
+                  onClick={() => setStatsPlayer(player)}
+                  className="flex-1 border py-2 text-[10px] font-black uppercase transition-all rounded-sm"
+                  style={{ borderColor: 'var(--e-border)', color: 'var(--e-text)' }}
+                >
                   VIEW STATS
                 </button>
                 {isAdmin && (
@@ -192,6 +197,34 @@ const Players: React.FC<PlayersProps> = ({ isAdmin = false }) => {
           ))}
           {players.length === 0 && <div className="text-xs font-mono col-span-full text-center py-8" style={{ color: 'var(--e-text-dim)' }}>No players registered yet.</div>}
         </motion.div>
+      )}
+
+      {statsPlayer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setStatsPlayer(null)}>
+          <div className="border-2 p-8 max-w-md w-full text-left rounded-sm" style={{ backgroundColor: 'var(--e-card)', borderColor: 'var(--e-accent)' }} onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-2xl font-black uppercase tracking-wide mb-1" style={{ color: 'var(--e-text)' }}>{statsPlayer.username}</h3>
+            <p className="text-[10px] font-mono font-bold mb-6" style={{ color: 'var(--e-accent)' }}>{teamName(statsPlayer.teamId)} · {statsPlayer.role}</p>
+            <div className="space-y-2 font-mono text-xs">
+              {Object.keys(statsPlayer.stats || {}).length === 0 ? (
+                <p style={{ color: 'var(--e-text-dim)' }}>No stats recorded for this player yet.</p>
+              ) : (
+                Object.entries(statsPlayer.stats).map(([key, value]) => (
+                  <div key={key} className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--e-border)' }}>
+                    <span className="uppercase font-bold" style={{ color: 'var(--e-text-dim)' }}>{key}</span>
+                    <span className="font-bold" style={{ color: 'var(--e-text)' }}>{String(value)}</span>
+                  </div>
+                ))
+              )}
+            </div>
+            <button
+              onClick={() => setStatsPlayer(null)}
+              className="w-full mt-6 py-3 font-black text-xs tracking-widest uppercase transition-all rounded-sm"
+              style={{ backgroundColor: 'var(--e-accent)', color: '#000' }}
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

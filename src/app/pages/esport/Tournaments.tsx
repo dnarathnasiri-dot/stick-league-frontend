@@ -47,6 +47,7 @@ const Tournaments: React.FC<TournamentsProps> = ({ isAdmin = false }) => {
 
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [showAllLogs, setShowAllLogs] = useState(false);
 
   // Form states
   const [name, setName] = useState('');
@@ -293,7 +294,12 @@ const Tournaments: React.FC<TournamentsProps> = ({ isAdmin = false }) => {
               <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">Team 'V0ID_WALKERS' has completed verification.</p>
             </div>
           </div>
-          <button className="w-full border border-[var(--e-border)] py-3.5 font-display text-sm tracking-wider hover:bg-[var(--e-card-bg-2)] transition-colors uppercase font-extrabold">VIEW ALL LOGS</button>
+          <button
+            onClick={() => setShowAllLogs(true)}
+            className="w-full border border-[var(--e-border)] py-3.5 font-display text-sm tracking-wider hover:bg-[var(--e-card-bg-2)] transition-colors uppercase font-extrabold"
+          >
+            VIEW ALL LOGS
+          </button>
         </div>
       </div>
 
@@ -374,6 +380,43 @@ const Tournaments: React.FC<TournamentsProps> = ({ isAdmin = false }) => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* ALL LOGS MODAL */}
+      {showAllLogs && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setShowAllLogs(false)}>
+          <div className="bg-[var(--e-card-bg)] border-2 border-primary p-8 max-w-lg w-full text-left max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-display text-3xl text-primary mb-6 uppercase tracking-wider font-bold">ALL SYSTEM LOGS</h3>
+            <div className="space-y-4">
+              <div className="p-4 bg-[var(--e-card-bg-2)] border-l-4 border-primary">
+                <p className="font-mono text-[9px] text-primary mb-1 font-bold">SECURITY BREACH ATTEMPT</p>
+                <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">Unauthorized tournament modification request blocked for ID: SL-2026-A1.</p>
+              </div>
+              <div className="p-4 bg-[var(--e-card-bg-2)] border-l-4 border-[var(--e-text-dim)]">
+                <p className="font-mono text-[9px] text-[var(--e-text-dim)] mb-1 font-bold">SYSTEM MAINTENANCE</p>
+                <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">Scheduled database optimization starting in 2 hours.</p>
+              </div>
+              <div className="p-4 bg-[var(--e-card-bg-2)] border-l-4 border-[var(--e-accent)]">
+                <p className="font-mono text-[9px] text-[var(--e-accent)] mb-1 font-bold">NEW TEAM VERIFIED</p>
+                <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">Team 'V0ID_WALKERS' has completed verification.</p>
+              </div>
+              <div className="p-4 bg-[var(--e-card-bg-2)] border-l-4 border-[var(--e-border)]">
+                <p className="font-mono text-[9px] text-[var(--e-text-dim)] mb-1 font-bold">TOURNAMENT CREATED</p>
+                <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">A new tournament entry was added to the roster.</p>
+              </div>
+              <div className="p-4 bg-[var(--e-card-bg-2)] border-l-4 border-[var(--e-border)]">
+                <p className="font-mono text-[9px] text-[var(--e-text-dim)] mb-1 font-bold">LOGIN AUDIT</p>
+                <p className="font-sans text-xs text-[var(--e-text-muted)] leading-relaxed font-semibold">Admin session started from a new device.</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowAllLogs(false)}
+              className="w-full mt-6 py-3.5 bg-primary text-black font-extrabold hover:bg-primary/95 transition-colors font-display text-sm tracking-wider"
+            >
+              CLOSE
+            </button>
           </div>
         </div>
       )}

@@ -3,8 +3,13 @@ import ReplayVideoModal, { type PlayableVideo } from '../../components/ReplayVid
 import replayShattered from '../../../imports/replay-stickman-fight.mp4';
 import replayCarnage from '../../../imports/replay-rain-scene.mp4';
 
-const Brackets: React.FC = () => {
+interface BracketsProps {
+  onNavigate?: (page: string) => void;
+}
+
+const Brackets: React.FC<BracketsProps> = ({ onNavigate }) => {
   const [playingReplay, setPlayingReplay] = useState<PlayableVideo | null>(null);
+  const [accessGranted, setAccessGranted] = useState(false);
   return (
     <div className="space-y-16 pb-12 select-none subpixel-antialiased text-left">
       {/* Tournament Header */}
@@ -146,7 +151,13 @@ const Brackets: React.FC = () => {
                   <span className="font-display text-4xl font-extrabold text-[var(--e-text)] uppercase leading-none">TBD</span>
                 </div>
                 <div className="text-center font-mono text-[9px] font-bold text-[var(--e-text-muted)] italic">SUNDAY MIDNIGHT // INDUSTRIAL ZONE 4</div>
-                <button className="w-full bg-primary text-black font-display py-4 text-xl tracking-wider hover:scale-[0.98] active:scale-[0.95] transition-transform uppercase font-extrabold">GET ACCESS</button>
+                <button
+                  onClick={() => setAccessGranted(true)}
+                  disabled={accessGranted}
+                  className="w-full bg-primary text-black font-display py-4 text-xl tracking-wider hover:scale-[0.98] active:scale-[0.95] transition-transform uppercase font-extrabold disabled:opacity-70"
+                >
+                  {accessGranted ? 'ACCESS GRANTED' : 'GET ACCESS'}
+                </button>
               </div>
             </div>
           </div>
@@ -221,7 +232,12 @@ const Brackets: React.FC = () => {
               <span className="font-mono text-xs text-on-surface">1,150 K</span>
             </div>
           </div>
-          <button className="w-full border-2 border-primary text-primary font-display py-3 hover:bg-primary/10 transition-colors uppercase font-extrabold text-sm tracking-wider">VIEW FULL RANKINGS</button>
+          <button
+            onClick={() => onNavigate?.('esport-leaderboard')}
+            className="w-full border-2 border-primary text-primary font-display py-3 hover:bg-primary/10 transition-colors uppercase font-extrabold text-sm tracking-wider"
+          >
+            VIEW FULL RANKINGS
+          </button>
         </div>
       </section>
 

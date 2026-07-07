@@ -20,6 +20,8 @@ interface MatchItem {
 const Matches: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'live' | 'upcoming' | 'completed'>('all');
   const [playingReplay, setPlayingReplay] = useState<PlayableVideo | null>(null);
+  const [detailMatch, setDetailMatch] = useState<MatchItem | null>(null);
+  const [visibleCount, setVisibleCount] = useState(4);
   const [matches, setMatches] = useState<MatchItem[]>([
     {
       id: 'STK-001',
@@ -71,13 +73,14 @@ const Matches: React.FC = () => {
     setMatches(prev => prev.map(m => m.id === id ? { ...m, hasReminder: !m.hasReminder } : m));
   };
 
-  const filteredMatches = matches.filter(m => {
+  const filteredMatchesAll = matches.filter(m => {
     if (activeTab === 'all') return true;
     if (activeTab === 'live') return m.type === 'live';
     if (activeTab === 'upcoming') return m.type === 'upcoming' || m.type === 'scheduled';
     if (activeTab === 'completed') return m.type === 'completed';
     return true;
   });
+  const filteredMatches = filteredMatchesAll.slice(0, visibleCount);
 
   return (
     <div className="space-y-12 select-none subpixel-antialiased text-left">
@@ -227,7 +230,12 @@ const Matches: React.FC = () => {
                 >
                   MATCH REPLAY
                 </button>
-                <button className="flex-1 bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-2.5 font-display text-xs font-extrabold hover:bg-[var(--e-surface-container-high)] transition-colors text-[var(--e-text)] tracking-wider">STATISTICS</button>
+                <button
+                  onClick={() => setDetailMatch(m)}
+                  className="flex-1 bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-2.5 font-display text-xs font-extrabold hover:bg-[var(--e-surface-container-high)] transition-colors text-[var(--e-text)] tracking-wider"
+                >
+                  STATISTICS
+                </button>
               </div>
             ) : m.type === 'upcoming' ? (
               <button 
@@ -238,7 +246,12 @@ const Matches: React.FC = () => {
                 {m.hasReminder ? 'REMINDER SET' : 'SET REMINDER'}
               </button>
             ) : (
-              <button className="w-full bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-3.5 font-display text-sm tracking-wider text-[var(--e-text)] hover:bg-[var(--e-surface-container-high)] transition-colors font-extrabold">VIEW PRE-MATCH DATA</button>
+              <button
+                onClick={() => setDetailMatch(m)}
+                className="w-full bg-[var(--e-card-bg-2)] border border-[var(--e-border)] py-3.5 font-display text-sm tracking-wider text-[var(--e-text)] hover:bg-[var(--e-surface-container-high)] transition-colors font-extrabold"
+              >
+                VIEW PRE-MATCH DATA
+              </button>
             )}
           </div>
         ))}
@@ -247,10 +260,58 @@ const Matches: React.FC = () => {
       {/* Load More */}
       <div className="mt-12 text-center py-12 relative overflow-hidden">
         <div className="absolute inset-x-0 top-1/2 h-px bg-outline-variant ink-scratch"></div>
-        <button className="relative bg-[var(--e-bg)] px-8 font-display text-sm text-primary hover:tracking-widest transition-all uppercase font-extrabold">SHOWING {filteredMatches.length} OF 32 MATCHES — LOAD MORE</button>
+        {visibleCount < filteredMatchesAll.length ? (
+          <button
+            onClick={() => setVisibleCount(c => c + 4)}
+            className="relative bg-[var(--e-bg)] px-8 font-display text-sm text-primary hover:tracking-widest transition-all uppercase font-extrabold"
+          >
+            SHOWING {filteredMatches.length} OF {filteredMatchesAll.length} MATCHES — LOAD MORE
+          </button>
+        ) : (
+          <span className="relative bg-[var(--e-bg)] px-8 font-mono text-xs text-[var(--e-text-muted)] uppercase font-bold">
+            SHOWING ALL {filteredMatchesAll.length} MATCHES
+          </span>
+        )}
       </div>
 
       <ReplayVideoModal video={playingReplay} onClose={() => setPlayingReplay(null)} />
+
+      {/* MATCH DETAIL MODAL */}
+      {detailMatch && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setDetailMatch(null)}>
+          <div className="bg-[var(--e-card-bg)] border-2 border-primary p-8 max-w-md w-full text-left" onClick={(e) => e.stopPropagation()}>
+            <h3 className="font-display text-2xl text-primary mb-4 uppercase tracking-wider font-bold">
+              {detailMatch.team1Name} vs {detailMatch.team2Name}
+            </h3>
+            <div className="space-y-3 font-mono text-xs">
+              <div className="flex justify-between border-b border-[var(--e-border)] pb-2">
+                <span className="text-[var(--e-text-muted)] uppercase font-bold">Status</span>
+                <span className="text-[var(--e-text)] font-bold">{detailMatch.timeText}</span>
+              </div>
+              <div className="flex justify-between border-b border-[var(--e-border)] pb-2">
+                <span className="text-[var(--e-text-muted)] uppercase font-bold">Map</span>
+                <span className="text-[var(--e-text)] font-bold">{detailMatch.map}</span>
+              </div>
+              {detailMatch.type === 'completed' && (
+                <div className="flex justify-between border-b border-[var(--e-border)] pb-2">
+                  <span className="text-[var(--e-text-muted)] uppercase font-bold">Final Score</span>
+                  <span className="text-primary font-bold">{detailMatch.team1Score} — {detailMatch.team2Score}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-[var(--e-text-muted)] uppercase font-bold">Match ID</span>
+                <span className="text-[var(--e-text)] font-bold">{detailMatch.id}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => setDetailMatch(null)}
+              className="w-full mt-6 py-3 bg-primary text-black font-display text-sm tracking-wider font-extrabold hover:bg-primary/90 transition-colors"
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

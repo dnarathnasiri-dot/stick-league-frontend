@@ -252,6 +252,7 @@ const CreateTournament: React.FC<CreateTournamentProps> = ({ onCreated }) => {
         >
           <button
             type="button"
+            onClick={() => onCreated?.()}
             className="px-6 py-3.5 border border-[var(--e-border)] text-on-surface hover:bg-[var(--e-card-bg-2)] transition-colors font-display text-sm font-extrabold tracking-wider"
           >
             DISCARD

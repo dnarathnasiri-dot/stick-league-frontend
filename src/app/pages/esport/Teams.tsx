@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { TeamApi, TournamentApi, type Team, type TeamRequest, type Tournament } from '../../../lib/esportApi';
+import { TeamApi, TournamentApi, PlayerApi, type Team, type TeamRequest, type Tournament, type Player } from '../../../lib/esportApi';
 
 const inputStyle = { backgroundColor: 'var(--e-bg)', borderColor: 'var(--e-border)', color: 'var(--e-text)' };
 
@@ -27,6 +27,23 @@ const Teams: React.FC<TeamsProps> = ({ isAdmin = false }) => {
   const [name, setName] = useState('');
   const [logoUrl, setLogoUrl] = useState('');
   const [tournamentId, setTournamentId] = useState('');
+
+  const [rosterTeam, setRosterTeam] = useState<Team | null>(null);
+  const [rosterPlayers, setRosterPlayers] = useState<Player[]>([]);
+  const [rosterLoading, setRosterLoading] = useState(false);
+
+  const viewRoster = async (team: Team) => {
+    setRosterTeam(team);
+    setRosterLoading(true);
+    try {
+      const players = await PlayerApi.list(team.id);
+      setRosterPlayers(players);
+    } catch {
+      setRosterPlayers([]);
+    } finally {
+      setRosterLoading(false);
+    }
+  };
 
   const tournamentName = (id?: string) => tournaments.find((t) => t.id === id)?.name ?? 'UNASSIGNED';
 
@@ -155,7 +172,11 @@ const Teams: React.FC<TeamsProps> = ({ isAdmin = false }) => {
               </div>
 
               <div className="flex gap-2 mt-6">
-                <button className="flex-1 border py-2 text-[10px] font-black uppercase transition-all rounded-sm" style={{ borderColor: 'var(--e-border)', color: 'var(--e-text)' }}>
+                <button
+                  onClick={() => viewRoster(team)}
+                  className="flex-1 border py-2 text-[10px] font-black uppercase transition-all rounded-sm"
+                  style={{ borderColor: 'var(--e-border)', color: 'var(--e-text)' }}
+                >
                   VIEW ROSTER
                 </button>
                 {isAdmin && (
@@ -168,6 +189,35 @@ const Teams: React.FC<TeamsProps> = ({ isAdmin = false }) => {
           ))}
           {teams.length === 0 && <div className="text-xs font-mono col-span-full text-center py-8" style={{ color: 'var(--e-text-dim)' }}>No teams registered yet.</div>}
         </motion.div>
+      )}
+
+      {rosterTeam && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setRosterTeam(null)}>
+          <div className="border-2 p-8 max-w-md w-full text-left rounded-sm" style={{ backgroundColor: 'var(--e-card)', borderColor: 'var(--e-accent)' }} onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-2xl font-black uppercase tracking-wide mb-6" style={{ color: 'var(--e-text)' }}>{rosterTeam.name} — ROSTER</h3>
+            {rosterLoading ? (
+              <p className="font-mono text-xs" style={{ color: 'var(--e-text-dim)' }}>Loading roster...</p>
+            ) : rosterPlayers.length === 0 ? (
+              <p className="font-mono text-xs" style={{ color: 'var(--e-text-dim)' }}>No players on this roster yet.</p>
+            ) : (
+              <div className="space-y-2 font-mono text-xs">
+                {rosterPlayers.map((p) => (
+                  <div key={p.id} className="flex justify-between border-b pb-2" style={{ borderColor: 'var(--e-border)' }}>
+                    <span className="font-bold" style={{ color: 'var(--e-text)' }}>{p.username}</span>
+                    <span className="uppercase font-bold" style={{ color: 'var(--e-text-dim)' }}>{p.role}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <button
+              onClick={() => setRosterTeam(null)}
+              className="w-full mt-6 py-3 font-black text-xs tracking-widest uppercase transition-all rounded-sm"
+              style={{ backgroundColor: 'var(--e-accent)', color: '#000' }}
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

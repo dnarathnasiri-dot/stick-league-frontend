@@ -44,9 +44,14 @@ const REPLAYS: ReplayClip[] = [
   },
 ];
 
-const Home: React.FC = () => {
+interface HomeProps {
+  onNavigate?: (page: string) => void;
+}
+
+const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const [contractAccepted, setContractAccepted] = useState(false);
   const [playingReplay, setPlayingReplay] = useState<ReplayClip | null>(null);
+  const [detailsContract, setDetailsContract] = useState<{ title: string; desc: string; reward: string } | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([
     { username: 'CYBER_PUNK', text: 'Just cleared Night Crawler on Hard. Insane.', isPrimary: true },
     { username: 'GHOST_USER', text: 'Anyone looking for a squad for Season 01?' },
@@ -152,7 +157,12 @@ const Home: React.FC = () => {
               </div>
               <div className="flex justify-between items-center pt-4 border-t border-outline-variant/30">
                 <span className="font-display text-xl text-primary font-bold">4,500 SC</span>
-                <button className="font-mono text-[10px] hover:text-primary transition-colors font-bold tracking-wider">DETAILS</button>
+                <button
+                  onClick={() => setDetailsContract({ title: 'SILENT STRIKE', desc: 'Win 3 matches without losing a single life.', reward: '4,500 SC' })}
+                  className="font-mono text-[10px] hover:text-primary transition-colors font-bold tracking-wider"
+                >
+                  DETAILS
+                </button>
               </div>
             </div>
 
@@ -176,7 +186,12 @@ const Home: React.FC = () => {
               </div>
               <div className="flex justify-between items-center pt-4 border-t border-outline-variant/30">
                 <span className="font-display text-xl text-primary font-bold">6,200 SC</span>
-                <button className="font-mono text-[10px] hover:text-primary transition-colors font-bold tracking-wider">DETAILS</button>
+                <button
+                  onClick={() => setDetailsContract({ title: 'INK SPILL', desc: 'Deal 50,000 total damage in any tournament mode.', reward: '6,200 SC' })}
+                  className="font-mono text-[10px] hover:text-primary transition-colors font-bold tracking-wider"
+                >
+                  DETAILS
+                </button>
               </div>
             </div>
           </div>
@@ -252,7 +267,12 @@ const Home: React.FC = () => {
                 <span className="font-mono text-xs text-primary font-bold">15.4K</span>
               </div>
             </div>
-            <button className="w-full mt-8 py-3.5 border border-primary text-primary font-display text-sm tracking-wider font-extrabold hover:bg-primary hover:text-black transition-all">VIEW FULL RANKINGS</button>
+            <button
+              onClick={() => onNavigate?.('esport-leaderboard')}
+              className="w-full mt-8 py-3.5 border border-primary text-primary font-display text-sm tracking-wider font-extrabold hover:bg-primary hover:text-black transition-all"
+            >
+              VIEW FULL RANKINGS
+            </button>
           </div>
 
           {/* LIVE FEED / CHATTER */}
@@ -286,6 +306,29 @@ const Home: React.FC = () => {
 
       {/* REPLAY VIDEO MODAL */}
       <ReplayVideoModal video={playingReplay} onClose={() => setPlayingReplay(null)} />
+
+      {/* CONTRACT DETAILS MODAL */}
+      {detailsContract && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setDetailsContract(null)}>
+          <div
+            className="bg-surface-container border-2 border-primary p-8 max-w-md w-full text-left"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-display text-3xl text-primary mb-3 uppercase tracking-wider font-bold">{detailsContract.title}</h3>
+            <p className="font-sans text-sm text-on-surface-variant leading-relaxed font-medium mb-6">{detailsContract.desc}</p>
+            <div className="flex justify-between items-center mb-6">
+              <span className="font-mono text-[10px] text-on-surface-variant uppercase font-bold">REWARD</span>
+              <span className="font-display text-xl text-primary font-bold">{detailsContract.reward}</span>
+            </div>
+            <button
+              onClick={() => setDetailsContract(null)}
+              className="w-full py-3 bg-primary-container text-white font-display text-sm tracking-wider font-extrabold hover:bg-[#a23d36] transition-colors"
+            >
+              CLOSE
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
