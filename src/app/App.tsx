@@ -296,6 +296,7 @@ export default function App() {
             onNavigate={(p) => setPage(p)}
             onExit={() => setPage("doors")}
             isAdmin={isAdmin}
+            username={currentUser?.username}
             >
               {page === "esport-home" && <EsportHome onNavigate={(p) => setPage(p as EsportPage)} />}
               {page === "esport-dashboard" && <EsportDashboard />}
