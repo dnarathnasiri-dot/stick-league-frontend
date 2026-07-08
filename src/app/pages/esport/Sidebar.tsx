@@ -1,6 +1,18 @@
 // src/pages/esport/Sidebar.tsx
 import React from 'react';
 import { motion } from 'motion/react';
+import {
+  Home,
+  Trophy,
+  Swords,
+  Network,
+  Users,
+  User,
+  BarChart3,
+  Search,
+  Plus,
+  ShieldCheck,
+} from 'lucide-react';
 
 export type EsportPage =
   | 'esport-home'
@@ -33,20 +45,20 @@ const menuItemVariants = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAdmin }) => {
-  const menuItems: { name: string; path: EsportPage }[] = [
-    { name: 'HOME', path: 'esport-home' },
-    { name: 'TOURNAMENT', path: 'esport-tournaments' },
-    { name: 'MATCHES', path: 'esport-matches' },
-    { name: 'BRACKETS', path: 'esport-brackets' },
-    { name: 'TEAMS', path: 'esport-teams' },
-    { name: 'PLAYERS', path: 'esport-players' },
-    { name: 'LEADERBOARD', path: 'esport-leaderboard' },
-    { name: 'SEARCH', path: 'esport-search' },
+  const menuItems: { name: string; path: EsportPage; icon: React.ElementType }[] = [
+    { name: 'HOME', path: 'esport-home', icon: Home },
+    { name: 'TOURNAMENT', path: 'esport-tournaments', icon: Trophy },
+    { name: 'MATCHES', path: 'esport-matches', icon: Swords },
+    { name: 'BRACKETS', path: 'esport-brackets', icon: Network },
+    { name: 'TEAMS', path: 'esport-teams', icon: Users },
+    { name: 'PLAYERS', path: 'esport-players', icon: User },
+    { name: 'LEADERBOARD', path: 'esport-leaderboard', icon: BarChart3 },
+    { name: 'SEARCH', path: 'esport-search', icon: Search },
   ];
 
-  const utilityItems: { name: string; path: EsportPage; icon: string }[] = [
-    { name: 'CREATE NEW', path: 'esport-create-tournament', icon: 'add' },
-    { name: 'ADMIN PANEL', path: 'esport-dashboard', icon: 'shield_person' },
+  const utilityItems: { name: string; path: EsportPage; icon: React.ElementType }[] = [
+    { name: 'CREATE NEW', path: 'esport-create-tournament', icon: Plus },
+    { name: 'ADMIN PANEL', path: 'esport-dashboard', icon: ShieldCheck },
   ];
 
   return (
@@ -73,6 +85,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAd
         <motion.nav className="space-y-1" variants={menuContainer} initial="hidden" animate="show">
           {menuItems.map((item) => {
             const isActive = currentPage === item.path;
+            const Icon = item.icon;
             return (
               <motion.button
                 key={item.name}
@@ -80,12 +93,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAd
                 onClick={() => onNavigate(item.path)}
                 whileHover={{ x: isActive ? 0 : 4 }}
                 whileTap={{ scale: 0.97 }}
-                className={`relative w-full text-left px-4 py-3.5 text-sm tracking-widest transition-all overflow-hidden flex items-center font-display border-l-4 ${
-                  isActive 
-                    ? 'bg-[var(--e-primary-container)] border-[var(--e-accent)] text-white font-extrabold' 
+                className={`relative w-full text-left px-4 py-3.5 text-sm tracking-widest transition-all overflow-hidden flex items-center gap-3 font-display border-l-4 ${
+                  isActive
+                    ? 'bg-[var(--e-primary-container)] border-[var(--e-accent)] text-white font-extrabold'
                     : 'border-transparent text-[var(--e-text-muted)] hover:text-[var(--e-accent)] hover:bg-[var(--e-surface-container-low)] font-medium'
                 }`}
               >
+                <Icon size={16} strokeWidth={2.25} className="shrink-0 relative z-10" />
                 <span className="relative z-10">{item.name}</span>
               </motion.button>
             );
@@ -97,6 +111,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAd
           <div className="mt-6 pt-4 border-t border-[var(--e-border)]/60 space-y-1">
             {utilityItems.map((item) => {
               const isActive = currentPage === item.path;
+              const Icon = item.icon;
               return (
                 <motion.button
                   key={item.name}
@@ -109,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onNavigate, onExit, isAd
                       : 'border-transparent text-[var(--e-text-muted)] hover:text-[var(--e-accent)] hover:bg-[var(--e-surface-container-low)] font-medium'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm">{item.icon}</span>
+                  <Icon size={14} strokeWidth={2.25} className="shrink-0 relative z-10" />
                   <span className="relative z-10">{item.name}</span>
                 </motion.button>
               );
