@@ -74,10 +74,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           <div className="flex items-baseline gap-4">
             <span className="font-display text-7xl md:text-8xl leading-none text-on-surface tracking-tight font-black">LEVEL 42</span>
           </div>
-          <div className="relative h-4 w-full bg-surface-container-high border border-outline-variant/30">
-            <div className="absolute top-0 left-0 h-full bg-primary-container red-inner-glow" style={{ width: '78%', opacity: 0.9 }}>
-              <div className="absolute right-0 top-0 h-full w-4 bg-white/20 animate-pulse"></div>
-            </div>
+          <div className="relative h-[3px] w-full bg-surface-container-high">
+            <div className="absolute top-0 left-0 h-full bg-primary" style={{ width: '78%' }}></div>
           </div>
           <div className="flex justify-between font-mono text-[10px] uppercase font-bold text-on-surface-variant">
             <span className="text-primary font-black">XP: 145,200 / 180,000</span>
